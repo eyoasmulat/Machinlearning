@@ -12,6 +12,9 @@ label_encoder = joblib.load('models/label_encoder.joblib')
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+import platform
+if platform.system() == "Windows":
+    import pywin32
 
 class InputData(BaseModel):
     Age: int
