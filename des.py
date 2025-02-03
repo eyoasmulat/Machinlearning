@@ -62,6 +62,7 @@
 #     return FileResponse("static/index.html")
 
 
+
 import pandas as pd
 import joblib
 from fastapi import FastAPI
@@ -80,7 +81,8 @@ except Exception as e:
     raise RuntimeError(f"Error loading models: {str(e)}")
 
 app = FastAPI()
-# Enable CORS
+
+# Enable CORS (adjust as per production needs)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Adjust this to your frontend's origin for production
@@ -88,6 +90,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Static files route
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class InputData(BaseModel):
@@ -148,7 +152,7 @@ async def read_root():
 # Ensure to bind the app to all interfaces (0.0.0.0) for production.
 if __name__ == "__main__":
     import uvicorn
-    host = os.getenv("HOST", "0.0.0.0")  # Get host from environment variable (default to 0.0.0.0)
-    port = int(os.getenv("PORT", 8000))  # Get port from environment variable (default to 8000)
+    # Get host and port from environment variables for deployment on Render
+    host = os.getenv("HOST", "0.0.0.0")  # Default to "0.0.0.0" if not set
+    port = int(os.getenv("PORT", 8000))  # Default to port 8000 if not set
     uvicorn.run(app, host=host, port=port)
-
