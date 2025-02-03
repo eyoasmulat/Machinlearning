@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports Injury Risk Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a2949;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 30px;
+      width: 400px;
+      background-image: url('static/mach.avif' );
+      background-size: cover;
+      background-position: center;
+      background-size: 100% 100%;
+      
+    }
+    .container:hover{
+      box-shadow: 0 10px 16px rgba(88, 78, 78, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #1b1a1a;
+      font-size: 30px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 100%;
+    }
+    .btn {
+      background-color: #2563eb;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+    .card {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #d1fae5;
+      border-radius: 8px;
+    }
+    .error {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sports Injury Risk Predictor</h2>
+    <form id="predictionForm">
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="Age" placeholder="enter predict age" required>
+
+      <label for="trainingHours">Training Hours per Week:</label>
+      <input type="number" id="trainingHours" name="Training_Hours_per_Week" placeholder="enter predict trainingHours"  required>
+
+      <label for="previousInjuries">Previous Injuries:</label>
+      <input type="number" id="previousInjuries" name="Previous_Injuries" placeholder="enter predict Previous_Injuries" required>
+
+      <label for="bmi">BMI:</label>
+      <input type="number" id="bmi" name="BMI" placeholder="enter predict BMI" step="0.1" required>
+
+      <label for="gender">Gender:</label>
+      <select id="gender" name="Gender" placeholder="enter predict Gnder" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <label for="sport">Sport:</label>
+      <select id="sport" name="Sport" required>
+        <option value="">Select Sport</option>
+        <option value="Basketball">Basketball</option>
+        <option value="Rugby">Rugby</option>
+        <option value="Soccer">Soccer</option>
+        <option value="Tennis">Tennis</option>
+        <option value="Athletics">Athletics</option>
+      </select>
+
+      <button type="submit" class="btn">Predict</button>
+    </form>
+
+    <div id="result" class="card" style="display: none;"></div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    document.getElementById('predictionForm').addEventListener('submit', async function (e) {
+      e.preventDefault(); // Prevent the default form submission
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('error').style.display = 'none';
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error(await response.text());
+
+        const result = await response.json();
+        document.getElementById('result').textContent = `Random Forest Prediction: ${result["Random Forest Prediction"]}, KNN Prediction: ${result["KNN Prediction"]}`;
+        document.getElementById('result').style.display = 'block';
+      } catch (error) {
+        document.getElementById('error').textContent = `Error: ${error.message}`;
+        document.getElementById('error').style.display = 'block';
+      }
+    });
+  </script>
+    
+</body>
+</html>
