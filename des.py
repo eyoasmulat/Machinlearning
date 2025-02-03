@@ -10,11 +10,10 @@ rf_model = joblib.load('models/model_rf.joblib')
 knn_model = joblib.load('models/model_knn.joblib')
 label_encoder = joblib.load('models/label_encoder.joblib')
 
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-import platform
-if platform.system() == "Windows":
-    import pywin32
+
 
 class InputData(BaseModel):
     Age: int
