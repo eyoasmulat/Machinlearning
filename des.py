@@ -66,6 +66,7 @@ import pandas as pd
 import joblib
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse
 import os  # For environment variable management
@@ -79,6 +80,14 @@ except Exception as e:
     raise RuntimeError(f"Error loading models: {str(e)}")
 
 app = FastAPI()
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this to your frontend's origin for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class InputData(BaseModel):
