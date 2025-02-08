@@ -24,7 +24,7 @@ The goal is to train a robust model that accurately predicts Injury_Risk based o
 ## 📂 Key Files
 
 - 📜 `mach1.ipynb` – Jupyter Notebook containing the full implementation.
-- 📊 `des.csv` – The dataset used for training and testing.
+- 📊 `sports_injury1.csv` – The dataset used for training and testing.
 
 ## 🚀 How to Run
 
